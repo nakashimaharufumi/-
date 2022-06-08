@@ -1,6 +1,13 @@
 function setup() {
-    createCanvas(600, 800);
-    writePath();
+    createCanvas(600, 700);
+    initVar();
+}
+
+let myBlockX, myBlockY;
+
+function initVar() {
+    myBlockX = 5;
+    myBlockY = 1;
 }
 
 function writePath() {
@@ -15,10 +22,17 @@ function writePath() {
 }
 let cs = 0;
 let score = 0;
+let count = 0;
 let masu = [];
 
 function draw() {
+    count++;
+    clear();
+    writePath();
+    textSize(30);
+    text("count: "+parseInt(count/60), 100, 30);
     drawPzl();
+    moveBlock();
 }
 
 function drawPzl() {
@@ -32,18 +46,34 @@ function drawPzl() {
         masu.push(masu_x);
     }
 
+    //drawBlock();
+
     for (let y=1; y<16; y++) {
         for (let x=1; x<11; x++) {
             if (masu[y][x]==1) square(40*x, 40*y, 40);
+            //else if (masu[y][x]==0) clearSquare(40*x, 40*y, 40);
         }
     }
-
-    drawBlock();
 }
 
-
-let myBlockX = 5;
-let myBlockY = 1;
 function drawBlock() {
-    for (let i=-1; i<2; i++) square(40*(myBlockX+i), 40*myBlockY, 40);
+    /*
+    for (let i=-1; i<2; i++) {
+        masu[myBlockY][myBlockX+i] = 1;
+        //masu[myBlockY-1][myBlockX+i] = 0;
+    }
+    */
+    masu[myBlockY][myBlockX] = 1;
+    masu[myBlockY-1][myBlockX] = 0;
+}
+
+function moveBlock() {
+    if (count%(60*5)==0) myBlockY++;
+    if (keyIsPressed && keyCode==DOWN_ARROW) {
+        keyIsPressed = false;
+        if (masu[myBlockY+1][myBlockX-1]+masu[myBlockY+1][myBlockX]+masu[myBlockY+1][myBlockX+1]==0) {
+            myBlockY++;
+        }
+    }
+    drawBlock();
 }
