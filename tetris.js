@@ -29,7 +29,8 @@ function writeField() {
     for (let i=1; i<10; i++) line((i+1)*40, 40, (i+1)*40, 640);
     for (let i=1; i<15; i++) line(40, (i+1)*40, 440, (i+1)*40);
     textSize(30);
-    text("count: "+parseInt(count/60), 100, 30);
+    text("count: "+parseInt(count/60), 50, 30);
+    text("score: "+score, 200, 30)
 }
 
 let cs = 0;
@@ -108,6 +109,7 @@ function moveBlock() {
             for (y=16; y>0; y--) {
                 if (kesu[y]>0) {
                     kesu[y] = 0;
+                    score += 100;
                     for (x=11;x>0; x--) masu[y][x] = 0;
                 }
             }
