@@ -1,3 +1,5 @@
+//import { Block } from './block';
+
 function setup() {
     createCanvas(600, 700);
     initVar();
@@ -38,6 +40,7 @@ let cs = 0;
 let score = 0;
 let count = 0;
 let bl;
+let block;
 let masu = [];
 let kesu = [];
 
@@ -78,6 +81,9 @@ function drawPzl() {
                 col = color(0, 255, 255);
                 fill(col);
                 square(40*x, 40*y, 40);
+            } else if (masu[y][x]==7) {
+                col = color(128, 128, 128);
+                fill(col);
             }
         }
     }
@@ -89,11 +95,12 @@ let move = 0; //ブロック移動の場合分け用変数
 function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
-            bl = parseInt(random(1, 7));
+            bl = parseInt(random(1, 8));
             move = 1;
         break;
         case 1: //ブロック操作
-            masu[myBlockY][myBlockX] = bl;
+            block = new Block(bl, myBlockX, myBlockY);
+            block.make();
 
             if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
                 keyIsPressed = false;
@@ -124,7 +131,9 @@ function moveBlock() {
         break;
         case 2: //列が揃っているか判定
             for (let y=16; y>0; y--) {
-                if (masu[y][1]>0 && masu[y][2]>0 && masu[y][3]>0 && masu[y][4]>0 && masu[y][5]>0 && masu[y][6]>0 && masu[y][7]>0 && masu[y][8]>0 && masu[y][9]>0 && masu[y][10]>0) {
+                if (masu[y][1]>0 && masu[y][2]>0 && masu[y][3]>0 && masu[y][4]>0 
+                && masu[y][5]>0 && masu[y][6]>0 && masu[y][7]>0 && masu[y][8]>0 
+                && masu[y][9]>0 && masu[y][10]>0) {
                     kesu[y] = 1;
                 } else kesu[y] = 0;
             }
@@ -163,15 +172,53 @@ function moveBlock() {
     }
 }
 
-/*
 class Block {
-    constructor() {
+    constructor(bl, myBlockX, myBlockY) {
+        this.type = bl;
         this.x = myBlockX;
         this.y = myBlockY;
     }
 
-    make() {
-        masu[y][x] = 1;
+    make() { //ブロック作成
+        if (this.type==1) { //左鍵
+            masu[this.y][this.x] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y+1][this.x+1] = this.type;
+            masu[this.y+2][this.x+1] = this.type;
+        } else if (this.type==2) { //右鍵
+            masu[this.y][this.x+1] = this.type;
+            masu[this.y+1][this.x+1] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y+2][this.x] = this.type;
+        } else if (this.type==3) { //L字
+            masu[this.y][this.x] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y][this.x+1] = this.type;
+            masu[this.y+2][this.x] = this.type;
+        } else if (this.type==4) { //逆L字
+            masu[this.y][this.x] = this.type;
+            masu[this.y][this.x+1] = this.type;
+            masu[this.y+1][this.x+1] = this.type;
+            masu[this.y+2][this.x+1] = this.type;
+        } else if (this.type==5) { //凸字
+            masu[this.y][this.x] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y+1][this.x+1] = this.type;
+            masu[this.y+2][this.x] = this.type;
+        } else if (this.type==6) { //四角
+            masu[this.y][this.x] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y+1][this.x+1] = this.type;
+            masu[this.y][this.x+1] = this.type;
+        } else if (this.type==7) { //棒
+            masu[this.y][this.x] = this.type;
+            masu[this.y+1][this.x] = this.type;
+            masu[this.y+2][this.x] = this.type;
+            masu[this.y+3][this.x] = this.type;
+        }
+    }
+
+    move() { //ブロック移動
+
     }
 }
-*/
