@@ -95,8 +95,7 @@ let move = 0; //ブロック移動の場合分け用変数
 function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
-            //bl = parseInt(random(1, 8));
-            bl = 1;
+            bl = parseInt(random(1, 4));
             move = 1;
         break;
         case 1: //ブロック操作
@@ -227,7 +226,7 @@ class Block {
                 keyIsPressed = false;
                 if (masu[this.y+2][this.x]==0 && masu[this.y+3][this.x+1]==0) {
                     myBlockY++;
-                    masu[this.y+2][this.x] = masu[this.y+3][this.x+1] = bl;
+                    masu[this.y+2][this.x] = masu[this.y+3][this.x+1] = this.type;
                     masu[this.y][this.x] = masu[this.y+1][this.x+1] = 0;
                 } else {
                     move = 2;
@@ -238,7 +237,7 @@ class Block {
                 if (masu[this.y][this.x+1]==0 && masu[this.y+1][this.x+2]==0 
                 && masu[this.y+2][this.x+2]==0) {
                     myBlockX++;
-                    masu[this.y][this.x+1] = masu[this.y+1][this.x+2] = masu[this.y+2][this.x+2] = bl;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x+2] = masu[this.y+2][this.x+2] = this.type;
                     masu[this.y][this.x] = masu[this.y+1][this.x] = masu[this.y+2][this.x+1] = 0;
                 }
             }
@@ -247,8 +246,66 @@ class Block {
                 if (masu[this.y][this.x-1]==0 && masu[this.y+1][this.x-1]==0 
                 && masu[this.y+2][this.x]==0) {
                     myBlockX--;
-                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = masu[this.y+2][this.x] = bl;
+                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = masu[this.y+2][this.x] = this.type;
                     masu[this.y][this.x] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
+                }
+            }
+        } else if (this.type==2) { //右鍵
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+                keyIsPressed = false;
+                if (masu[this.y+2][this.x+1]==0 && masu[this.y+3][this.x]==0) {
+                    myBlockY++;
+                    masu[this.y+2][this.x+1] = masu[this.y+3][this.x] = this.type;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x] = 0;
+                } else {
+                    move = 2;
+                }
+            }
+            if (keyIsPressed && keyCode==RIGHT_ARROW) { //右移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x+2]==0 && masu[this.y+1][this.x+2]==0 
+                && masu[this.y+2][this.x+1]==0) {
+                    myBlockX++;
+                    masu[this.y][this.x+2] = masu[this.y+1][this.x+2] = masu[this.y+2][this.x+1] = this.type;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x] = masu[this.y+2][this.x] = 0;
+                }
+            }
+            if (keyIsPressed && keyCode==LEFT_ARROW) { //左移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x]==0 && masu[this.y+1][this.x-1]==0 
+                && masu[this.y+2][this.x-1]==0) {
+                    myBlockX--;
+                    masu[this.y][this.x] = masu[this.y+1][this.x-1] = masu[this.y+2][this.x-1] = this.type;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x] = 0;
+                }
+            }
+        } else if (this.type==3) { //右鍵
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+                keyIsPressed = false;
+                if (masu[this.y+3][this.x]==0 && masu[this.y+1][this.x+1]==0) {
+                    myBlockY++;
+                    masu[this.y+3][this.x] = masu[this.y+1][this.x+1] = this.type;
+                    masu[this.y][this.x] = masu[this.y][this.x+1] = 0;
+                } else {
+                    move = 2;
+                }
+            }
+            if (keyIsPressed && keyCode==RIGHT_ARROW) { //右移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x+2]==0 && masu[this.y+1][this.x+1]==0 
+                && masu[this.y+2][this.x+1]==0) {
+                    myBlockX++;
+                    masu[this.y][this.x+2] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = this.type;
+                    masu[this.y][this.x] = masu[this.y+1][this.x] = masu[this.y+2][this.x] = 0;
+                }
+            }
+            if (keyIsPressed && keyCode==LEFT_ARROW) { //左移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x-1]==0 && masu[this.y+1][this.x-1]==0 
+                && masu[this.y+2][this.x-1]==0) {
+                    myBlockX--;
+                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = masu[this.y+2][this.x-1] = this.type;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x] = masu[this.y+2][this.x] = 0;
                 }
             }
         }
