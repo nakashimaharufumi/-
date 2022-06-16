@@ -95,13 +95,15 @@ let move = 0; //ブロック移動の場合分け用変数
 function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
-            bl = parseInt(random(1, 8));
+            //bl = parseInt(random(1, 8));
+            bl = 1;
             move = 1;
         break;
         case 1: //ブロック操作
             block = new Block(bl, myBlockX, myBlockY);
             block.make();
-
+            block.move();
+            /*
             if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
                 keyIsPressed = false;
                 if (masu[myBlockY+1][myBlockX]==0) {
@@ -128,6 +130,7 @@ function moveBlock() {
                     masu[myBlockY][myBlockX+1] = 0;
                 }
             }
+            */
         break;
         case 2: //列が揃っているか判定
             for (let y=16; y>0; y--) {
@@ -219,6 +222,35 @@ class Block {
     }
 
     move() { //ブロック移動
-
+        if (this.type==1) { //左鍵
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+                keyIsPressed = false;
+                if (masu[this.y+2][this.x]==0 && masu[this.y+3][this.x+1]==0) {
+                    myBlockY++;
+                    masu[this.y+2][this.x] = masu[this.y+3][this.x+1] = bl;
+                    masu[this.y][this.x] = masu[this.y+1][this.x+1] = 0;
+                } else {
+                    move = 2;
+                }
+            }
+            if (keyIsPressed && keyCode==RIGHT_ARROW) { //右移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x+1]==0 && masu[this.y+1][this.x+2]==0 
+                && masu[this.y+2][this.x+2]==0) {
+                    myBlockX++;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x+2] = masu[this.y+2][this.x+2] = bl;
+                    masu[this.y][this.x] = masu[this.y+1][this.x] = masu[this.y+2][this.x+1] = 0;
+                }
+            }
+            if (keyIsPressed && keyCode==LEFT_ARROW) { //左移動
+                keyIsPressed = false;
+                if (masu[this.y][this.x-1]==0 && masu[this.y+1][this.x-1]==0 
+                && masu[this.y+2][this.x]==0) {
+                    myBlockX--;
+                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = masu[this.y+2][this.x] = bl;
+                    masu[this.y][this.x] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
+                }
+            }
+        }
     }
 }
