@@ -40,6 +40,7 @@ let cs = 0;
 let score = 0;
 let count = 0;
 let bl;
+let sh;
 let block;
 let masu = [];
 let kesu = [];
@@ -97,12 +98,14 @@ function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
             //bl = parseInt(random(1, 8));
-            bl = 7;
+            bl = 1;
+            sh = 1;
             move = 1;
         break;
         case 1: //ブロック操作
-            block = new Block(bl, myBlockX, myBlockY);
+            block = new Block(bl, sh, myBlockX, myBlockY);
             block.make();
+            //block.spin();
             block.move();
         break;
         case 2: //列が揃っているか判定
@@ -149,18 +152,26 @@ function moveBlock() {
 }
 
 class Block {
-    constructor(bl, myBlockX, myBlockY) {
+    constructor(bl, sh, myBlockX, myBlockY) {
         this.type = bl;
+        this.shape = sh;
         this.x = myBlockX;
         this.y = myBlockY;
     }
 
     make() { //ブロック作成
         if (this.type==1) { //左鍵
-            masu[this.y][this.x] = this.type;
-            masu[this.y+1][this.x] = this.type;
-            masu[this.y+1][this.x+1] = this.type;
-            masu[this.y+2][this.x+1] = this.type;
+            if (this.shape==1 || this.shape==3) {
+                masu[this.y][this.x] = this.type;
+                masu[this.y+1][this.x] = this.type;
+                masu[this.y+1][this.x+1] = this.type;
+                masu[this.y+2][this.x+1] = this.type;
+            } else {
+                masu[this.y][this.x] = this.type;
+                masu[this.y+1][this.x] = this.type;
+                masu[this.y][this.x+1] = this.type;
+                masu[this.y+1][this.x-1] = this.type;
+            }
         } else if (this.type==2) { //右鍵
             masu[this.y][this.x+1] = this.type;
             masu[this.y+1][this.x+1] = this.type;
@@ -196,6 +207,25 @@ class Block {
 
     move() { //ブロック移動
         if (this.type==1) { //左鍵
+            if (keyIsPressed && keyCode==UP_ARROW) {
+                keyIsPressed = false;
+                if ((this.shape==1 || this.shape==3) && masu[this.y][this.x+1]==0 
+                && masu[this.y+1][this.x-1]==0) {
+                    sh++;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x-1] = this.type;
+                    masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
+                }
+                if (this.shape==2 && masu[this.y+1][this.x+1]==0 && masu[this.y+2][this.x+1]==0) {
+                    sh++;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x-1] = 0;
+                    masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = this.type;
+                }
+                if (this.shape==4 && masu[this.y+1][this.x+1]==0 && masu[this.y+2][this.x+1]==0) {
+                    sh = 1;
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x-1] = 0;
+                    masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = this.type;
+                }
+            }
             if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
                 keyIsPressed = false;
                 if (masu[this.y+2][this.x]==0 && masu[this.y+3][this.x+1]==0) {
