@@ -98,7 +98,7 @@ function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
             //bl = parseInt(random(1, 3));
-            bl = 3;
+            bl = 4;
             sh = 1;
             move = 1;
         break;
@@ -184,7 +184,7 @@ class Block {
                 masu[this.y+1][this.x] = this.type;
                 masu[this.y+1][this.x+1] = this.type;
             }
-        } else if (this.type==3) { //L字
+        } else if (this.type==3) { //逆L字
             if (this.shape==1) { //右下
                 masu[this.y][this.x] = this.type;
                 masu[this.y+1][this.x] = this.type;
@@ -206,11 +206,28 @@ class Block {
                 masu[this.y][this.x+1] = this.type;
                 masu[this.y][this.x-1] = this.type;
             }
-        } else if (this.type==4) { //逆L字
-            masu[this.y][this.x] = this.type;
-            masu[this.y][this.x+1] = this.type;
-            masu[this.y+1][this.x+1] = this.type;
-            masu[this.y+2][this.x+1] = this.type;
+        } else if (this.type==4) { //L字
+            if (this.shape==1) { //左下
+                masu[this.y][this.x] = this.type;
+                masu[this.y][this.x+1] = this.type;
+                masu[this.y+1][this.x+1] = this.type;
+                masu[this.y+2][this.x+1] = this.type;
+            } else if (this.shape==2) { //右下
+                masu[this.y][this.x] = this.type;
+                masu[this.y+1][this.x] = this.type;
+                masu[this.y][this.x+1] = this.type;
+                masu[this.y][this.x+2] = this.type;
+            } else if (this.shape==3) { //右上
+                masu[this.y][this.x] = this.type;
+                masu[this.y+1][this.x] = this.type;
+                masu[this.y+1][this.x+1] = this.type;
+                masu[this.y-1][this.x] = this.type;
+            } else { //左上
+                masu[this.y+1][this.x] = this.type;
+                masu[this.y+1][this.x+1] = this.type;
+                masu[this.y][this.x+1] = this.type;
+                masu[this.y+1][this.x-1] = this.type;
+            }
         } else if (this.type==5) { //凸字
             if (this.shape==1) { //右
                 masu[this.y][this.x] = this.type;
@@ -371,7 +388,7 @@ class Block {
                     masu[this.y][this.x] = masu[this.y+1][this.x+1] = 0;
                 }
             }
-        } else if (this.type==3) { //L字
+        } else if (this.type==3) { //逆L字
             if (keyIsPressed && keyCode==UP_ARROW) { //右回転
                 keyIsPressed = false;
                 if (this.shape==1 && masu[this.y+1][this.x+1]==0 && masu[this.y+1][this.x+2]==0) { //右下→右上
@@ -469,33 +486,102 @@ class Block {
                     masu[this.y][this.x-2] = masu[this.y+1][this.x] = this.type;
                 }
             }
-        } else if (this.type==4) { //逆L字
+        } else if (this.type==4) { //L字
+            if (keyIsPressed && keyCode==UP_ARROW) { //右回転
+                keyIsPressed = false;
+                if (this.shape==1 && masu[this.y+1][this.x]==0 && masu[this.y][this.x+2]==0) { //左下→右下
+                    sh++;
+                    masu[this.y+1][this.x] = masu[this.y][this.x+2] = this.type;
+                    masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
+                }
+                if (this.shape==2 && masu[this.y+1][this.x+1]==0 && masu[this.y-1][this.x]==0) { //右下→右上
+                    sh++;
+                    masu[this.y+1][this.x+1] = masu[this.y-1][this.x] = this.type;
+                    masu[this.y][this.x+1] = masu[this.y][this.x+2] = 0;
+                }
+                if (this.shape==3 && masu[this.y+1][this.x-1]==0 && masu[this.y][this.x+1]==0) { //右上→左上
+                    sh++;
+                    masu[this.y+1][this.x-1] = masu[this.y][this.x+1]= this.type;
+                    masu[this.y][this.x] = masu[this.y-1][this.x] = 0;
+                }
+                if (this.shape==4 && masu[this.y][this.x]==0 && masu[this.y+2][this.x+1]==0) { //左上→左下
+                    sh = 1;
+                    masu[this.y][this.x] = masu[this.y+2][this.x+1]= this.type;
+                    masu[this.y+1][this.x-1] = masu[this.y+1][this.x] = 0;
+                }
+            }
             if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
                 keyIsPressed = false;
-                if (masu[this.y+3][this.x+1]==0 && masu[this.y+1][this.x]==0) {
+                if (this.shape==1 && masu[this.y+3][this.x+1]==0 && masu[this.y+1][this.x]==0) { //右下
                     myBlockY++;
                     masu[this.y+3][this.x+1] = masu[this.y+1][this.x] = this.type;
                     masu[this.y][this.x] = masu[this.y][this.x+1] = 0;
+                } else if (this.shape==2 && masu[this.y+2][this.x+1]==0 
+                    && masu[this.y+1][this.x+1]==0 && masu[this.y+1][this.x+2]==0) { //右上
+                    myBlockY++;
+                    masu[this.y+2][this.x] = masu[this.y+1][this.x+1] = masu[this.y+1][this.x+2] = this.type;
+                    masu[this.y][this.x] = masu[this.y][this.x+1] = masu[this.y][this.x+2] = 0;
+                } else if (this.shape==3 && masu[this.y+2][this.x]==0 && masu[this.y+2][this.x+1]==0) { //左上
+                    myBlockY++;
+                    masu[this.y+2][this.x] = masu[this.y+2][this.x+1] = this.type;
+                    masu[this.y+1][this.x+1] = masu[this.y-1][this.x] = 0;
+                } else if (this.shape==4 && masu[this.y+2][this.x]==0 
+                    && masu[this.y+2][this.x+1]==0 && masu[this.y+2][this.x-1]==0) { //左下
+                    myBlockY++;
+                    masu[this.y+2][this.x] = masu[this.y+2][this.x+1] = masu[this.y+2][this.x-1] = this.type;
+                    masu[this.y+1][this.x] = masu[this.y+1][this.x-1] = masu[this.y][this.x+1] = 0;
                 } else {
                     move = 2;
                 }
             }
             if (keyIsPressed && keyCode==RIGHT_ARROW) { //右移動
                 keyIsPressed = false;
-                if (masu[this.y][this.x+2]==0 && masu[this.y+1][this.x+2]==0 
-                && masu[this.y+2][this.x+2]==0) {
+                if (this.shape==1 && masu[this.y][this.x+2]==0 
+                    && masu[this.y+1][this.x+2]==0 && masu[this.y+2][this.x+2]==0) { //左下
                     myBlockX++;
                     masu[this.y][this.x+2] = masu[this.y+1][this.x+2] = masu[this.y+2][this.x+2] = this.type;
                     masu[this.y][this.x] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
                 }
+                if (this.shape==2 && masu[this.y+1][this.x+1]==0 && masu[this.y][this.x+3]==0) { //右下
+                    myBlockX++;
+                    masu[this.y+1][this.x+1] = masu[this.y][this.x+3] = this.type;
+                    masu[this.y][this.x] = masu[this.y+1][this.x] = 0;
+                }
+                if (this.shape==3 && masu[this.y][this.x+1]==0 
+                    && masu[this.y+1][this.x+2]==0 && masu[this.y-1][this.x+1]==0) { //右上
+                    myBlockX++;
+                    masu[this.y-1][this.x+1] = masu[this.y][this.x+1] = masu[this.y+1][this.x+2] = this.type;
+                    masu[this.y][this.x] = masu[this.y+1][this.x] = masu[this.y-1][this.x] = 0;
+                }
+                if (this.shape==4 && masu[this.y][this.x+2]==0 && masu[this.y+1][this.x+2]==0) {//左上
+                    myBlockX++; 
+                    masu[this.y][this.x+2] = masu[this.y+1][this.x+2] = this.type;
+                    masu[this.y+1][this.x-1] = masu[this.y][this.x+1] = 0;
+                }
             }
             if (keyIsPressed && keyCode==LEFT_ARROW) { //左移動
                 keyIsPressed = false;
-                if (masu[this.y][this.x-1]==0 && masu[this.y+1][this.x]==0 
-                && masu[this.y+2][this.x]==0) {
+                if (this.shape==1 && masu[this.y][this.x-1]==0 
+                    && masu[this.y+1][this.x]==0 && masu[this.y+2][this.x]==0) { //左下
                     myBlockX--;
                     masu[this.y][this.x-1] = masu[this.y+1][this.x] = masu[this.y+2][this.x] = this.type;
                     masu[this.y][this.x+1] = masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = 0;
+                }
+                if (this.shape==2 && masu[this.y][this.x-1]==0 && masu[this.y+1][this.x-1]==0) { //右下
+                    myBlockX--;
+                    masu[this.y+1][this.x] = masu[this.y][this.x+2] = 0;
+                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = this.type;
+                }
+                if (this.shape==3 && masu[this.y+1][this.x-1]==0 
+                    && masu[this.y][this.x-1]==0 && masu[this.y-1][this.x-1]==0) { //右上
+                    myBlockX--;
+                    masu[this.y-1][this.x] = masu[this.y][this.x] = masu[this.y+1][this.x+1] = 0;
+                    masu[this.y][this.x-1] = masu[this.y+1][this.x-1] = masu[this.y-1][this.x-1] = this.type;
+                }
+                if (this.shape==4 && masu[this.y+1][this.x-2]==0 && masu[this.y][this.x]==0) {//左上
+                    myBlockX--; 
+                    masu[this.y][this.x+1] = masu[this.y+1][this.x+1] = 0;
+                    masu[this.y+1][this.x-2] = masu[this.y][this.x] = this.type;
                 }
             }
         } else if (this.type==5) { //凸字
