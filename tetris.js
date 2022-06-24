@@ -516,7 +516,7 @@ class Block {
                     myBlockY++;
                     masu[this.y+3][this.x+1] = masu[this.y+1][this.x] = this.type;
                     masu[this.y][this.x] = masu[this.y][this.x+1] = 0;
-                } else if (this.shape==2 && masu[this.y+2][this.x+1]==0 
+                } else if (this.shape==2 && masu[this.y+2][this.x]==0 
                     && masu[this.y+1][this.x+1]==0 && masu[this.y+1][this.x+2]==0) { //右上
                     myBlockY++;
                     masu[this.y+2][this.x] = masu[this.y+1][this.x+1] = masu[this.y+1][this.x+2] = this.type;
