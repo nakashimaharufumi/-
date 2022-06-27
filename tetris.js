@@ -1,5 +1,3 @@
-//import { Block } from './block';
-
 function setup() {
     createCanvas(600, 700);
     initVar();
@@ -10,10 +8,10 @@ let myBlockX, myBlockY;
 function initVar() {
     myBlockX = 5;
     myBlockY = 1;
-    for (let i=0; i<17; i++) {
+    for (let y=0; y<17; y++) {
         let masu_x = [];
-        for (let j=0; j<12; j++) {
-            if (i==0 || i==16 || j==0 || j==11) masu_x.push(-1);
+        for (let x=0; x<12; x++) {
+            if (y==0 || y==16 || x==0 || x==11) masu_x.push(-1);
             else masu_x.push(0)
         }
         masu.push(masu_x);
@@ -33,7 +31,7 @@ function writeField() {
     fill(255);
     textSize(30);
     //text("count: "+parseInt(count/60), 50, 30);
-    text("score: "+score, 200, 30)
+    text("score: "+score, 50, 30)
 }
 
 let cs = 0;
@@ -92,6 +90,8 @@ function drawPzl() {
 }
 
 let move = 0; //ブロック移動の場合分け用変数
+let blockspeed = 1;
+let level = 1;
 
 //ブロック移動
 function moveBlock() {
@@ -101,6 +101,7 @@ function moveBlock() {
             //bl = 4;
             sh = 1;
             move = 1;
+            blockspeed = 60*5/level;
         break;
         case 1: //ブロック操作
             block = new Block(bl, sh, myBlockX, myBlockY);
@@ -109,7 +110,7 @@ function moveBlock() {
             block.move();
         break;
         case 2: //列が揃っているか判定
-            for (let y=16; y>0; y--) {
+            for (let y=15; y>0; y--) {
                 if (masu[y][1]>0 && masu[y][2]>0 && masu[y][3]>0 && masu[y][4]>0 
                     && masu[y][5]>0 && masu[y][6]>0 && masu[y][7]>0 && masu[y][8]>0 
                     && masu[y][9]>0 && masu[y][10]>0) kesu[y] = 2;
@@ -119,7 +120,7 @@ function moveBlock() {
                 else kesu[y] = 0;
             }
             let n = 0;
-            for (let y=16; y>0; y--) if (kesu[y]==2) n++;
+            for (let y=15; y>0; y--) if (kesu[y]==2) n++;
             if (n>0) move = 3;
             else {
                 myBlockX = 5;
@@ -128,10 +129,11 @@ function moveBlock() {
             }
         break;
         case 3: //ブロック削除
-            for (y=16; y>0; y--) {
+            for (y=15; y>0; y--) {
                 if (kesu[y]==2) {
                     kesu[y] = 0;
                     score += 100;
+                    if (score >= level*level*1000) level++;
                     for (x=11;x>0; x--) masu[y][x] = 0;
                 }
             }
@@ -150,7 +152,7 @@ function moveBlock() {
                 }
             }
             */
-           for (let y = 16; y>0; y--) {
+           for (let y=15; y>0; y--) {
                 if (kesu[y]==1 && kesu[y+1]==0) {
                     for (let x=10; x>0; x--) {
                         masu[y+1][x] = masu[y][x];
@@ -302,7 +304,7 @@ class Block {
                     masu[this.y+1][this.x+1] = masu[this.y+2][this.x+1] = this.type;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape%2==1 && masu[this.y+2][this.x]==0 && masu[this.y+3][this.x+1]==0) { //縦
                     myBlockY++;
@@ -360,7 +362,7 @@ class Block {
                     masu[this.y][this.x+1] = masu[this.y+2][this.x] = this.type;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape%2==1 && masu[this.y+2][this.x+1]==0 && masu[this.y+3][this.x]==0) { //縦
                     myBlockY++;
@@ -427,7 +429,7 @@ class Block {
                     masu[this.y][this.x-1] = masu[this.y+1][this.x+1] = 0;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape==1 && masu[this.y+3][this.x]==0 && masu[this.y+1][this.x+1]==0) { //右下
                     myBlockY++;
@@ -525,7 +527,7 @@ class Block {
                     masu[this.y+1][this.x-1] = masu[this.y+1][this.x] = 0;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape==1 && masu[this.y+3][this.x+1]==0 && masu[this.y+1][this.x]==0) { //右下
                     myBlockY++;
@@ -623,7 +625,7 @@ class Block {
                     masu[this.y+2][this.x] = masu[this.y+1][this.x+1] = this.type;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape==1 && masu[this.y+3][this.x]==0 && masu[this.y+2][this.x+1]==0) { //右
                     myBlockY++;
@@ -698,7 +700,7 @@ class Block {
                 }
             }
         } else if (this.type==6) { //四角
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (masu[this.y+2][this.x]==0 && masu[this.y+2][this.x+1]==0) {
                     myBlockY++;
@@ -741,7 +743,7 @@ class Block {
                     masu[this.y+1][this.x] = masu[this.y+2][this.x] = masu[this.y+3][this.x] = this.type;
                 }
             }
-            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%(60*5)==0) { //下移動
+            if ((keyIsPressed && keyCode==DOWN_ARROW) || count%blockspeed==0) { //下移動
                 keyIsPressed = false;
                 if (this.shape%2==1 && masu[this.y+4][this.x]==0) { //縦
                     myBlockY++;
