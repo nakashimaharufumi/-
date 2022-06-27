@@ -32,7 +32,7 @@ function writeField() {
     for (let i=1; i<15; i++) line(40, (i+1)*40, 440, (i+1)*40);
     fill(255);
     textSize(30);
-    text("count: "+parseInt(count/60), 50, 30);
+    //text("count: "+parseInt(count/60), 50, 30);
     text("score: "+score, 200, 30)
 }
 
@@ -97,8 +97,8 @@ let move = 0; //ブロック移動の場合分け用変数
 function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
-            //bl = parseInt(random(1, 3));
-            bl = 4;
+            bl = parseInt(random(1, 8));
+            //bl = 4;
             sh = 1;
             move = 1;
         break;
@@ -111,13 +111,15 @@ function moveBlock() {
         case 2: //列が揃っているか判定
             for (let y=16; y>0; y--) {
                 if (masu[y][1]>0 && masu[y][2]>0 && masu[y][3]>0 && masu[y][4]>0 
-                && masu[y][5]>0 && masu[y][6]>0 && masu[y][7]>0 && masu[y][8]>0 
-                && masu[y][9]>0 && masu[y][10]>0) {
-                    kesu[y] = 1;
-                } else kesu[y] = 0;
+                    && masu[y][5]>0 && masu[y][6]>0 && masu[y][7]>0 && masu[y][8]>0 
+                    && masu[y][9]>0 && masu[y][10]>0) kesu[y] = 2;
+                else if (masu[y][1]+masu[y][2]+masu[y][3]+masu[y][4]
+                    +masu[y][5]+masu[y][6]+masu[y][7]+masu[y][8]
+                    +masu[y][9]+masu[y][10]>0) kesu[y] = 1;
+                else kesu[y] = 0;
             }
             let n = 0;
-            for (let y=16; y>0; y--) if (kesu[y]>0) n++
+            for (let y=16; y>0; y--) if (kesu[y]==2) n++;
             if (n>0) move = 3;
             else {
                 myBlockX = 5;
@@ -127,7 +129,7 @@ function moveBlock() {
         break;
         case 3: //ブロック削除
             for (y=16; y>0; y--) {
-                if (kesu[y]>0) {
+                if (kesu[y]==2) {
                     kesu[y] = 0;
                     score += 100;
                     for (x=11;x>0; x--) masu[y][x] = 0;
@@ -137,6 +139,7 @@ function moveBlock() {
         break;
         case 4: //ブロック全体を落とす
             let c = 0;
+            /*
             for (let y=16; y>0; y--) {
                 for (let x=10; x>0; x--) {
                     if (masu[y][x]>0 && masu[y+1][x]==0) {
@@ -144,6 +147,18 @@ function moveBlock() {
                         masu[y][x] = 0;
                         c = 1;
                     }
+                }
+            }
+            */
+           for (let y = 16; y>0; y--) {
+                if (kesu[y]==1 && kesu[y+1]==0) {
+                    for (let x=10; x>0; x--) {
+                        masu[y+1][x] = masu[y][x];
+                        masu[y][x] = 0;
+                        c = 1;
+                    }
+                    kesu[y+1] = 1;
+                    kesu[y] = 0;
                 }
             }
             if (c==0) move = 2;
