@@ -58,12 +58,27 @@ function draw() {
             }
         break;
         case 1:
+            writeField();
+            fill(0);
+            textSize(30);
+            text("←キー：左移動", 70, 200);
+            text("↓キー：下移動", 70, 250);
+            text("→キー：右移動", 70, 300);
+            text("↑キー：反時計回り回転", 70, 350);
+            textSize(50);
+            text("Click to start", 70, 400);
+            if (mouseIsPressed) {
+                mouseIsPressed = false;
+                cs = 2;
+            }
+        break;
+        case 2:
             count++;
             writeField();
             drawPzl();
             moveBlock();
         break;
-        case 2:
+        case 3:
 
         break;
     }
