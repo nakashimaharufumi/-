@@ -34,7 +34,7 @@ function writeField() {
     text("score: "+score, 50, 30)
 }
 
-let cs = 0;
+let cs = 0; //ゲームの場合分け用変数
 let score = 0;
 let count = 0;
 let bl;
@@ -44,10 +44,29 @@ let masu = [];
 let kesu = [];
 
 function draw() {
-    count++;
-    writeField();
-    drawPzl();
-    moveBlock();
+    switch (cs) {
+        case 0:
+            writeField();
+            fill(0);
+            textSize(100);
+            text("TETRIS", 50, 300);
+            textSize(50);
+            text("Click to play", 70, 400);
+            if (mouseIsPressed) {
+                mouseIsPressed = false;
+                cs = 1;
+            }
+        break;
+        case 1:
+            count++;
+            writeField();
+            drawPzl();
+            moveBlock();
+        break;
+        case 2:
+
+        break;
+    }
 }
 
 //パズル描写
@@ -106,7 +125,6 @@ function moveBlock() {
         case 1: //ブロック操作
             block = new Block(bl, sh, myBlockX, myBlockY);
             block.make();
-            //block.spin();
             block.move();
         break;
         case 2: //列が揃っているか判定
@@ -141,18 +159,7 @@ function moveBlock() {
         break;
         case 4: //ブロック全体を落とす
             let c = 0;
-            /*
-            for (let y=16; y>0; y--) {
-                for (let x=10; x>0; x--) {
-                    if (masu[y][x]>0 && masu[y+1][x]==0) {
-                        masu[y+1][x] = masu[y][x];
-                        masu[y][x] = 0;
-                        c = 1;
-                    }
-                }
-            }
-            */
-           for (let y=15; y>0; y--) {
+            for (let y=15; y>0; y--) {
                 if (kesu[y]==1 && kesu[y+1]==0) {
                     for (let x=10; x>0; x--) {
                         masu[y+1][x] = masu[y][x];
@@ -786,6 +793,24 @@ class Block {
                     masu[this.y][this.x+2] = 0;
                 }
             }
+        }
+    }
+
+    check() {
+        if (this.type==1) { //左鍵
+            
+        } else if (this.type==2) { //右鍵
+            
+        } else if (this.type==3) { //逆L字
+            
+        } else if (this.type==4) { //L字
+            
+        } else if (this.type==5) { //凸字
+            
+        } else if (this.type==6) { //四角
+            
+        } else if (this.type==7) { //棒
+            
         }
     }
 }
