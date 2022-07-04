@@ -79,7 +79,17 @@ function draw() {
             moveBlock();
         break;
         case 3:
-
+            writeField();
+            fill(0);
+            textSize(60);
+            text("GAME OVER", 50, 300);
+            textSize(50);
+            text("Score: "+score, 70, 400);
+            text("Click to reset", 70, 480);
+            if (mouseIsPressed) {
+                mouseIsPressed = false;
+                cs = 0;
+            }
         break;
     }
 }
@@ -139,6 +149,7 @@ function moveBlock() {
         break;
         case 1: //ブロック操作
             block = new Block(bl, sh, myBlockX, myBlockY);
+            block.check();
             block.make();
             block.move();
         break;
