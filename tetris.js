@@ -142,14 +142,14 @@ function moveBlock() {
     switch (move) {
         case 0: //ブロック決定
             bl = parseInt(random(1, 8));
-            //bl = 4;
+            check(bl);
             sh = 1;
             move = 1;
             blockspeed = 60*5/level;
         break;
         case 1: //ブロック操作
             block = new Block(bl, sh, myBlockX, myBlockY);
-            block.check();
+            //block.check();
             block.make();
             block.move();
         break;
@@ -821,22 +821,29 @@ class Block {
             }
         }
     }
+}
 
-    check() {
-        if (this.type==1) { //左鍵
-            
-        } else if (this.type==2) { //右鍵
-            
-        } else if (this.type==3) { //逆L字
-            
-        } else if (this.type==4) { //L字
-            
-        } else if (this.type==5) { //凸字
-            
-        } else if (this.type==6) { //四角
-            
-        } else if (this.type==7) { //棒
-            
-        }
+function check(bl) {
+    if (bl==1) { //左鍵
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY+1][myBlockX]!=0
+            || masu[myBlockY+1][myBlockX+1]!=0 || masu[myBlockY+2][myBlockX+1]!=0) cs = 3;
+    } else if (bl==2) { //右鍵
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY+1][myBlockX+1]!=0
+            || masu[myBlockY+1][myBlockX]!=0 || masu[myBlockY+2][myBlockX]!=0) cs = 3;
+    } else if (bl==3) { //逆L字
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY][myBlockX+1]!=0
+            || masu[myBlockY+1][myBlockX]!=0 || masu[myBlockY+2][myBlockX]!=0) cs = 3;
+    } else if (bl==4) { //L字   
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY][myBlockX+1]!=0
+            || masu[myBlockY+1][myBlockX+1]!=0 || masu[myBlockY+2][myBlockX+1]!=0) cs = 3;
+    } else if (bl==5) { //凸字
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY+1][myBlockX+1]!=0
+            || masu[myBlockY+1][myBlockX]!=0 || masu[myBlockY+2][myBlockX]!=0) cs = 3;
+    } else if (bl==6) { //四角
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY][myBlockX+1]!=0
+            || masu[myBlockY+1][myBlockX]!=0 || masu[myBlockY+1][myBlockX+1]!=0) cs = 3;
+    } else if (bl==7) { //棒
+        if (masu[myBlockY][myBlockX]!=0 || masu[myBlockY+1][myBlockX]!=0
+            || masu[myBlockY+2][myBlockX]!=0 || masu[myBlockY+3][myBlockX]!=0) cs = 3;
     }
 }
