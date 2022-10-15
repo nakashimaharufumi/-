@@ -44,9 +44,9 @@ let masu = [];
 let kesu = [];
 
 function draw() {
+    writeField();
     switch (cs) {
-        case 0:
-            writeField();
+        case 0: //タイトル画面
             fill(0);
             textSize(100);
             text("TETRIS", 50, 300);
@@ -57,8 +57,7 @@ function draw() {
                 cs = 1;
             }
         break;
-        case 1:
-            writeField();
+        case 1: //操作説明
             fill(0);
             textSize(30);
             text("←キー：左移動", 70, 200);
@@ -72,14 +71,12 @@ function draw() {
                 cs = 2;
             }
         break;
-        case 2:
+        case 2: //プレイ画面
             count++;
-            writeField();
             drawPzl();
             moveBlock();
         break;
-        case 3:
-            writeField();
+        case 3: //ゲームオーバー画面
             fill(0);
             textSize(60);
             text("GAME OVER", 50, 300);
@@ -88,6 +85,7 @@ function draw() {
             text("Click to reset", 70, 480);
             if (mouseIsPressed) {
                 mouseIsPressed = false;
+                resetPzl();
                 cs = 0;
             }
         break;
@@ -129,6 +127,14 @@ function drawPzl() {
                 fill(col);
                 square(40*x, 40*y, 40);
             }
+        }
+    }
+}
+
+function resetPzl() {
+    for (let y=1; y<16; y++) {
+        for (let x=1; x<11; x++) {
+            masu[y][x] = 0;
         }
     }
 }
