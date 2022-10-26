@@ -48,6 +48,7 @@ function draw() {
     switch (cs) {
         case 0: //タイトル画面
             fill(0);
+            score = 0;
             textSize(100);
             text("TETRIS", 50, 300);
             textSize(50);
